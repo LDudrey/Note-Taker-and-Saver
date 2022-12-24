@@ -25,11 +25,55 @@ app.get('/notes', (req, res) => {
 app.get('/api/notes', (req, res) => {
     console.info(`${req.method} request received for notes`);
     readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)));
-  });
+});
+
+// POST API Route to add a note
+app.post('/api/notes', (req, res) => {
+    console.info(`${req.method} request received to add a note`);
+
+    const { title, text } = req.body;
+
+    if (title && text) {
+
+        const newNote = {
+            title,
+            text,
+            note_id: uuid(),
+        };
+
+        const noteString = JSON.stringify(newNote);
+
+        fs.readFile(`./db/db.json`, 'utf8', (err, data) => {
+            if (err) {
+                console.error(err)
+            } else {
+                const parsedNotes = JSON.parse(data);
+            }
+            fs.writeFile(
+                `./db/db.json`,
+                JSON.stringifty(parsedNotes),
+                (writeErr) =>
+                    writeErr
+                        ? console.error(err)
+                        : console.log(
+                            `Note ${newNote.title} has been written to JSON file`
+                        )
+            )
+        });
+        const response = {
+            status: 'success',
+            body: newNote,
+        };
+
+        console.log(response);
+        res.status(201).json(response);
+    } else {
+        res.status(500).json('Error in posting note');
+    }
+});
 
 
 
-
-  app.listen(PORT, () =>
-  console.log(`App listening at http://localhost:${PORT} 🚀`)
+app.listen(PORT, () =>
+    console.log(`App listening at http://localhost:${PORT} 🚀`)
 );
