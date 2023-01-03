@@ -10,7 +10,6 @@ const app = express();
 // Middleware functions
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 app.use(express.static('public'));
 
 // GET Route wildcard
@@ -58,38 +57,38 @@ app.post('/api/notes', (req, res) => {
 
 }
 );
-console.log(req.params.id)
-// DELETE 
-// app.delete('/api/notes/:id', (req, res) => {
-//     // console.info(`${req.method} request received to add a note`);
-//     // console.log(req.body);
-//     fs.readFile(`./db/db.json`, 'utf8', (err, data) => {
-//         if (err) {
-//             console.error(err)
-//         } else {
-//             const parsedNotes = JSON.parse(data);
-//             const newNotes = [];
-//             for (let i = 0; i < parsedNotes.length; i++) {
-//                 if (parsedNotes[i].id != req.params.id)
-//                 newNotes.push(parsedNotes[i])
-//             }
-            
-//             fs.writeFile(`./db/db.json`,
-//                 JSON.stringify(newNotes),
-//                 (writeErr) =>
-//                     writeErr
-//                         ? console.error(err)
-//                         : res.json(newNotes)
-//             )
-//         }
-//         // console.log(`Note ${newNote.title} has been written to JSON file`)
-//     });
 
-// }
-// );
+// DELETE notes
+app.delete('/api/notes/:id', (req, res) => {
+    // console.log(req.params.id)
+    // console.info(`${req.method} request received to remove a note`);
+    fs.readFile(`./db/db.json`, 'utf8', (err, data) => {
+        if (err) {
+            console.error(err)
+        } else {
+            const parsedNotes = JSON.parse(data);
+            const newNotes = [];
+            for (let i = 0; i < parsedNotes.length; i++) {
+                if (parsedNotes[i].id != req.params.id)
+                newNotes.push(parsedNotes[i])
+            }
+            
+            fs.writeFile(`./db/db.json`,
+                JSON.stringify(newNotes),
+                (writeErr) =>
+                    writeErr
+                        ? console.error(err)
+                        : res.json(newNotes)
+            )
+        }
+    });
+}
+);
 
 
 
 app.listen(PORT, () =>
     console.log(`App listening at http://localhost:${PORT} 🚀`)
 );
+
+//[{"title":"Note Taker","text":"Please work"},{"title":"Turn in project","text":"Due January 5th","id":"b544"}]
