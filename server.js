@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 // GET Route wildcard
-// app.get('*', (req, res) => {
+// app.get('*/', (req, res) => {
 //     res.sendFile(path.join(__dirname, '/public/index.html'));
 // });
 
@@ -29,7 +29,7 @@ app.get('/notes', (req, res) => {
 
 // GET API Route for notes that reads the db.json file and returns all saved notes.
 app.get('/api/notes', (req, res) => {
-    console.info(`${req.method} request received for notes`);
+    console.info(`${req.method} request received for notes page`);
     fs.readFile('./db/db.json', (error, data) => res.json(JSON.parse(data)));
 });
 
